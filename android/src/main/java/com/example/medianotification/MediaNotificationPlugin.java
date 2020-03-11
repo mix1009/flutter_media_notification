@@ -51,7 +51,8 @@ public class MediaNotificationPlugin implements MethodCallHandler {
                 final String titleColor = call.argument("titleColor");
                 final String subtitleColor = call.argument("subtitleColor");
                 final String iconColor = call.argument("iconColor");
-                show(title, author, play, image, length, offset, bgColor, titleColor, subtitleColor, iconColor);
+                final boolean disableBigRemoteView = call.argument("disableBigRemoteView");
+                show(title, author, play, image, length, offset, bgColor, titleColor, subtitleColor, iconColor, disableBigRemoteView);
                 result.success(null);
                 break;
             case "hide":
@@ -100,7 +101,7 @@ public class MediaNotificationPlugin implements MethodCallHandler {
         });
     }
 
-    public static void show(String title, String author, boolean play, byte[] image, int length, int offset, String bgColor, String titleColor, String subtitleColor, String iconColor) {
+    public static void show(String title, String author, boolean play, byte[] image, int length, int offset, String bgColor, String titleColor, String subtitleColor, String iconColor, boolean disableBigRemoteView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
@@ -110,7 +111,7 @@ public class MediaNotificationPlugin implements MethodCallHandler {
             notificationManager.createNotificationChannel(channel);
         }
 
-        nPanel = new NotificationPanel(registrar.context(), title, author, play, image, length, offset, bgColor, titleColor, subtitleColor, iconColor);
+        nPanel = new NotificationPanel(registrar.context(), title, author, play, image, length, offset, bgColor, titleColor, subtitleColor, iconColor, disableBigRemoteView);
     }
 
     private void hide() {

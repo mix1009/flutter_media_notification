@@ -30,7 +30,8 @@ public class NotificationPanel {
     private String titleColor;
     private String subtitleColor;
     private String iconColor;
-    public NotificationPanel(Context parent, String title, String author, boolean play, byte[] image, int length, int offset, String bgColor, String titleColor, String subtitleColor, String iconColor ) {
+    private boolean disableBigRemoteView;
+    public NotificationPanel(Context parent, String title, String author, boolean play, byte[] image, int length, int offset, String bgColor, String titleColor, String subtitleColor, String iconColor, boolean disableBigRemoteView) {
         this.parent = parent;
         this.title = title;
         this.author = author;
@@ -39,6 +40,7 @@ public class NotificationPanel {
         this.titleColor=titleColor;
         this.subtitleColor=subtitleColor;
         this.iconColor=iconColor;
+        this.disableBigRemoteView=disableBigRemoteView;
 
         nBuilder = new NotificationCompat.Builder(parent, "media_notification")
                 .setContentTitle("Player")
@@ -110,7 +112,9 @@ public class NotificationPanel {
         setBigLayoutListeners(bigRemoteView);
         setListeners(remoteView);
         nBuilder.setCustomContentView(remoteView);
-        nBuilder.setCustomBigContentView(bigRemoteView);
+        if (!disableBigRemoteView) {
+            nBuilder.setCustomBigContentView(bigRemoteView);
+        }
         Notification notification = nBuilder.build();
 
         nManager = (NotificationManager) parent.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -126,7 +130,9 @@ public class NotificationPanel {
             remoteView.setTextViewText(R.id.title, title);
             bigRemoteView.setTextViewText(R.id.title, title);
             nBuilder.setCustomContentView(remoteView);
-            nBuilder.setCustomBigContentView(bigRemoteView);
+            if (!disableBigRemoteView) {
+                nBuilder.setCustomBigContentView(bigRemoteView);
+            }
             nManager.notify(1,nBuilder.build());
         }
     }
@@ -136,7 +142,9 @@ public class NotificationPanel {
             remoteView.setTextViewText(R.id.author, subtitle);
             bigRemoteView.setTextViewText(R.id.author, subtitle);
             nBuilder.setCustomContentView(remoteView);
-            nBuilder.setCustomBigContentView(bigRemoteView);
+            if (!disableBigRemoteView) {
+                nBuilder.setCustomBigContentView(bigRemoteView);
+            }
             nManager.notify(1,nBuilder.build());
         }
     }
@@ -153,7 +161,9 @@ public class NotificationPanel {
             bigRemoteView.setImageViewBitmap(R.id.toggle, changeBitmapColor(toggleBmp,Color.parseColor(iconColor)));
         }
         nBuilder.setCustomContentView(remoteView);
-        nBuilder.setCustomBigContentView(bigRemoteView);
+        if (!disableBigRemoteView) {
+            nBuilder.setCustomBigContentView(bigRemoteView);
+        }
         nBuilder.setOngoing(this.play);
         nManager.notify(1,nBuilder.build());
     }
@@ -170,7 +180,9 @@ public class NotificationPanel {
             bigRemoteView.setImageViewBitmap(R.id.toggle, changeBitmapColor(toggleBmp,Color.parseColor(iconColor)));
         }
         nBuilder.setCustomContentView(remoteView);
-        nBuilder.setCustomBigContentView(bigRemoteView);
+        if (!disableBigRemoteView) {
+            nBuilder.setCustomBigContentView(bigRemoteView);
+        }
         nBuilder.setOngoing(this.play);
         nManager.notify(1,nBuilder.build());
     }
